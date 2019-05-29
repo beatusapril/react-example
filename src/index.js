@@ -257,8 +257,26 @@ class ItemsList extends React.Component {
             // sumPay: 0
         };
         this.sums = this.sums.bind(this);
+        this.updateItem = this.updateItem.bind(this);
+        //this.update = this.update.bind(this);
        /* this.setState({numberOfWorkingDays: event.target.value})*/
         //thisthis.state.commonSum = this.sums();
+    }
+
+    updateItem (id, itemAttributes) {
+        var index = this.state.items.findIndex(x=> x.id === id);
+        if (index === -1){
+
+        }
+        else{
+            this.setState({
+                items: [
+                    ...this.state.items.slice(0,index),
+                    Object.assign({}, this.state.items[index], itemAttributes),
+                    ...this.state.items.slice(index+1)
+                ]
+            });
+        }
     }
 
     sums(){
@@ -270,13 +288,15 @@ class ItemsList extends React.Component {
     }
 
     onChangeNmb(numb, index) {
+        this.updateItem(index, {numberOfWorkingDays: numb});
         // this.state.items[index].numberOfWorkingDays = numb;
-        items: update(this.state.items, {index: {numberOfWorkingDays: {$set: numb}}})
+        //items: update(this.state.items, {index: {numberOfWorkingDays: {$set: numb}}})
             /* this.setState({numberOfWorkingDay: numb});*/
     }
 
     onChangeDs(ds, index) {
-        items: update(this.state.items, {index: {dailySalary: {$set: ds}}})
+        this.updateItem(index, {dailySalary: ds});
+        //items: update(this.state.items, {index: {dailySalary: {$set: ds}}})
         // this.state.items[index].dailySalary = ds;
         /*this.setState({dailySalary: ds});*/
     }
