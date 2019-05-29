@@ -93,7 +93,6 @@ class ItemsList extends React.Component {
 
     onChangeNmb(numb, index) {
         if (typeof(this.state.items) != 'undefined') {
-            //if (typeof(this.state.items.item(index).dailySalary)!= 'undefined'){
             var listIt = this.state.items;
             console.log(numb);
             console.log(index);
