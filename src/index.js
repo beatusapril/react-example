@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+//import update from 'react-addons-update';
+import update from 'immutability-helper';
 
 /*class Item extends React.Component {
 
@@ -237,16 +239,16 @@ class ItemsList extends React.Component {
         super(props);
         this.state = {
             items: [
-                { name: 'Ivan',   surname: 'Ivanov',   numberOfWorkingDays: 3,  dailySalary: 500},
-                { name: 'Petr',   surname: 'Petrov',   numberOfWorkingDays: 4,  dailySalary: 600},
-                { name: 'Vasiliy',surname: 'Vasilev',  numberOfWorkingDays: 5,  dailySalary: 700},
-                { name: 'Anna',   surname: 'Olegovna', numberOfWorkingDays: 6,  dailySalary: 800},
-                { name: 'Rita',   surname: 'Ivanova',  numberOfWorkingDays: 7,  dailySalary: 900},
-                { name: 'Yulia',  surname: 'Petrova',  numberOfWorkingDays: 8,  dailySalary: 1000},
-                { name: 'Albert', surname: 'Kozlov',   numberOfWorkingDays: 9,  dailySalary: 500},
-                { name: 'Zhanna', surname: 'Palmirova',numberOfWorkingDays: 10, dailySalary: 600},
-                { name: 'Ivan',   surname: 'Smirnov',  numberOfWorkingDays: 11, dailySalary: 700},
-                { name: 'Sergey', surname: 'Sidorov',  numberOfWorkingDays: 12, dailySalary: 800}
+                { id: 1, name: 'Ivan',   surname: 'Ivanov',   numberOfWorkingDays: 3,  dailySalary: 500},
+                { id: 2, name: 'Petr',   surname: 'Petrov',   numberOfWorkingDays: 4,  dailySalary: 600},
+                { id: 3, name: 'Vasiliy',surname: 'Vasilev',  numberOfWorkingDays: 5,  dailySalary: 700},
+                { id: 4, name: 'Anna',   surname: 'Olegovna', numberOfWorkingDays: 6,  dailySalary: 800},
+                { id: 5, name: 'Rita',   surname: 'Ivanova',  numberOfWorkingDays: 7,  dailySalary: 900},
+                { id: 6, name: 'Yulia',  surname: 'Petrova',  numberOfWorkingDays: 8,  dailySalary: 1000},
+                { id: 7, name: 'Albert', surname: 'Kozlov',   numberOfWorkingDays: 9,  dailySalary: 500},
+                { id: 8, name: 'Zhanna', surname: 'Palmirova',numberOfWorkingDays: 10, dailySalary: 600},
+                { id: 9, name: 'Ivan',   surname: 'Smirnov',  numberOfWorkingDays: 11, dailySalary: 700},
+                { id: 10, name: 'Sergey', surname: 'Sidorov',  numberOfWorkingDays: 12, dailySalary: 800}
             ]
             ,
             commonSum:0
@@ -258,6 +260,8 @@ class ItemsList extends React.Component {
         };
         this.sums = this.sums.bind(this);
         this.updateItem = this.updateItem.bind(this);
+        //this.onChangeNmb = this.onChangeNmb(this);
+        //this.onChangeDs = this.onChangeDs(this);
         //this.update = this.update.bind(this);
        /* this.setState({numberOfWorkingDays: event.target.value})*/
         //thisthis.state.commonSum = this.sums();
@@ -288,16 +292,20 @@ class ItemsList extends React.Component {
     }
 
     onChangeNmb(numb, index) {
-        this.updateItem(index, {numberOfWorkingDays: numb});
+        var listIt = this.state.items;
+       // this.updateItem(index, {numberOfWorkingDays: numb});
         // this.state.items[index].numberOfWorkingDays = numb;
-        //items: update(this.state.items, {index: {numberOfWorkingDays: {$set: numb}}})
+        listIt: update(listIt, {index: {numberOfWorkingDays: {$set: numb}}});
+        this.setState({items: listIt});
             /* this.setState({numberOfWorkingDay: numb});*/
     }
 
     onChangeDs(ds, index) {
-        this.updateItem(index, {dailySalary: ds});
-        //items: update(this.state.items, {index: {dailySalary: {$set: ds}}})
-        // this.state.items[index].dailySalary = ds;
+        var listIt = this.state.items;
+        //this.updateItem(index, {dailySalary: ds});
+        listIt: update(this.state.items, {index: {dailySalary: {$set: ds}}});
+        this.setState({items: listIt});
+         //this.state.items[index].dailySalary = ds;
         /*this.setState({dailySalary: ds});*/
     }
 
@@ -310,16 +318,18 @@ class ItemsList extends React.Component {
             paddingLeft: '450px'
         };
         const list = this.state.items.map((item, index) => {
-            return <Item index={index+1} name={item.name} surname={item.surname}
+            return <Item key={item.id}
+                         index={index+1} name={item.name} surname={item.surname}
                          numberOfWorkingDays={item.numberOfWorkingDays}
+                         dailySalary = {item.dailySalary}
                          onHdWk = {this.onChangeNmb}
-                         onHdDs = {this.onChangeDs}
-                         dailySalary = {item.dailySalary}/>;
+                         onHdDs = {this.onChangeDs}/>;
         });
 
         return <div>
+            <div>{this.props.title}</div>
             <table>
-                <caption>{this.props.title}</caption>
+                <tbody >
                 <tr>
                     <th>№</th>
                     <th>Имя</th>
@@ -328,7 +338,8 @@ class ItemsList extends React.Component {
                     <th>Ставка за день</th>
                     <th>Итого</th>
                 </tr>
-                {list}
+                {list === null?null:list}
+                </tbody>
             </table>
             <div style={divStyle}>Общая сумма: {this.sums()}</div>
         </div>;
